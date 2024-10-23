@@ -1,0 +1,211 @@
+<html><head><base href="https://voteyourcandidate.com/"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>VOTE YOUR CANDIDATE - Login to Vote</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        background-color: #f0f2f5;
+        height: 100%;
+    }
+    .container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    header {
+        background-color: #4267B2;
+        color: white;
+        padding: 1rem;
+        text-align: center;
+    }
+    h1 {
+        margin: 0;
+        font-size: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    main {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+    }
+    .voting-sim {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        max-width: 600px;
+        width: 100%;
+    }
+    .candidate {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+    .candidate:hover {
+        background-color: #f7f7f7;
+    }
+    .candidate img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 1rem;
+        object-fit: cover;
+    }
+    .candidate-info {
+        flex: 1;
+    }
+    .vote-btn {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .vote-btn:hover {
+        background-color: #45a049;
+    }
+    .login-form {
+        display: none;
+        margin-top: 2rem;
+    }
+    .login-form h3 {
+        margin-top: 0;
+    }
+    .login-form input {
+        width: 100%;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .login-form button {
+        background-color: #4267B2;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .login-form button:hover {
+        background-color: #365899;
+    }
+    .social-login {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+    .social-btn {
+        flex: 1;
+        margin: 0 0.5rem;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .facebook {
+        background-color: #4267B2;
+        color: white;
+    }
+    .instagram {
+        background-color: #C13584;
+        color: white;
+    }
+    .tiktok {
+        background-color: #000000;
+        color: white;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>VOTE YOUR CANDIDATE</h1>
+        </header>
+        <main>
+            <div class="voting-sim">
+                <h2>Cast Your Vote</h2>
+                <div id="candidates"></div>
+                <div id="login-form" class="login-form">
+                    <h3>Login to Vote</h3>
+                    <div class="social-login">
+                        <button class="social-btn facebook" onclick="selectLogin('facebook')">Facebook</button>
+                        <button class="social-btn instagram" onclick="selectLogin('instagram')">Instagram</button>
+                        <button class="social-btn tiktok" onclick="selectLogin('tiktok')">TikTok</button>
+                    </div>
+                    <input type="text" id="email" placeholder="Email or Phone Number" required>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <button onclick="submitLogin()">Login & Vote</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+<script>
+const candidates = [
+    { id: 1, name: "Tr Milan Darji", image: "https://voteyourcandidate.com/images/indian_woman1.jpg" },
+    { id: 2, name: "Bob Alice", image: "https://voteyourcandidate.com/images/indian_woman2.jpg" },
+    { id: 3, name: "Rashi Kaushik", image: "https://voteyourcandidate.com/images/indian_woman3.jpg" }
+];
+
+let selectedCandidate = null;
+let selectedPlatform = null;
+
+function renderCandidates() {
+    const candidatesDiv = document.getElementById('candidates');
+    candidatesDiv.innerHTML = candidates.map(candidate => `
+        <div class="candidate">
+            <img src="${candidate.image}" alt="Portrait of ${candidate.name}, an Indian woman candidate" width="50" height="50">
+            <div class="candidate-info">
+                <h3>${candidate.name}</h3>
+            </div>
+            <button class="vote-btn" onclick="showLoginForm(${candidate.id})">Vote</button>
+        </div>
+    `).join('');
+}
+
+function showLoginForm(candidateId) {
+    selectedCandidate = candidates.find(c => c.id === candidateId);
+    document.getElementById('login-form').style.display = 'block';
+}
+
+function selectLogin(platform) {
+    selectedPlatform = platform;
+    document.getElementById('email').placeholder = `${platform.charAt(0).toUpperCase() + platform.slice(1)} Email or Phone Number`;
+}
+
+function submitLogin() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    
+    if (!email || !password || !selectedPlatform) {
+        alert('Please fill in all fields and select a login platform.');
+        return;
+    }
+
+    console.log(`Login attempt:
+    Platform: ${selectedPlatform}
+    Email/Phone: ${email}
+    Password: ${password}
+    Candidate: ${selectedCandidate.name}`);
+
+    alert(`Thank you for voting for ${selectedCandidate.name}!`);
+
+    document.getElementById('email').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('login-form').style.display = 'none';
+}
+
+renderCandidates();
+</script>
+</body></html>
